@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CardMgr : MonoBehaviour
 {
 	[SerializeField] List<CardDecision> _listCard = new List<CardDecision>();
+	[SerializeField] Image _imgBg = null;
 	[SerializeField] MakeSuggestion _makeSuggestion = null;
 
 	Stack<CardDecision> _stackCard = new Stack<CardDecision>();
@@ -134,6 +136,7 @@ public class CardMgr : MonoBehaviour
 	{
 		if (_stackCard.Count == 0)
 		{
+			_imgBg.enabled = false;
 			for (var i = 0; i < transform.childCount; ++i)
 			{
 				transform.GetChild(i).gameObject.SetActive(false);
