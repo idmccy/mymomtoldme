@@ -16,16 +16,31 @@ public class CardMgr : MonoBehaviour
 	int _countNo = 0;
 	bool _done = false;
 
-	void Awake()
+	public static void Shuffle<T>(IList<T> list)
 	{
-		EatLocation.Init();
+		int n = list.Count;
+		var rng = new System.Random();
+		while (n > 1)
+		{
+			n--;
+			int k = rng.Next(n + 1);
+			T value = list[k];
+			list[k] = list[n];
+			list[n] = value;
+		}
 	}
 
 	void Start()
 	{
-		_listCard[0].Setup(EatLocation.Presets["Arts"]);
-		_listCard[1].Setup(EatLocation.Presets["Engine"]);
-		_listCard[2].Setup(EatLocation.Presets["PGP"]);
+		int i = 0;
+		var listPresets = new List<EatLocation>(EatLocation.Presets.Values);
+		Shuffle(listPresets);
+		foreach (var preset in listPresets)
+		{
+			_listCard[i].Setup(preset);
+			++i;
+			if (i >= _listCard.Count) break;
+		}
 
 		_stackCard.Push(_listCard[2]);
 		_stackCard.Push(_listCard[1]);
