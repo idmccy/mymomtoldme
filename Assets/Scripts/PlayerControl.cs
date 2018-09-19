@@ -50,24 +50,43 @@ public class PlayerControl : NetworkBehaviour
 	void RpcSendVote(string s)
 	{
 		EatLocation location;
-		//if (upvote)
-		//{
-			if (!EatLocation.Presets.TryGetValue(s, out location))
-			{
-				location = new EatLocation(s, "no description");
-			}
-			VoteTracker.AddVote(location);
-		//}
-		//else
-		//{
-		//	var subName = s.Substring(0, s.Length - 2);
-		//	if (!EatLocation.Presets.TryGetValue(subName, out location))
-		//	{
-		//		location = new EatLocation(subName);
-		//	}
-		//	VoteTracker.RemoveVote(location);
-		//}
+
+		if (!EatLocation.Presets.TryGetValue(s, out location))
+		{
+			DebugText.Log("No such location: " + s);
+			return;
+		}
+		VoteTracker.AddVote(location);
+
 		VotesWindow.singleton.RefreshVotes();
+	}
+
+	public void SendSuggestion(string s, string desc)
+	{
+		CmdSendSuggestion(s, desc);
+	}
+
+	[Command]
+	void CmdSendSuggestion(string s, string desc)
+	{
+		RpcSendSuggestion(s, desc);
+	}
+
+	[ClientRpc]
+	void RpcSendSuggestion(string s, string desc)
+	{
+		EatLocation location;
+		if (!EatLocation.Presets.TryGetValue(s, out location))
+		{
+			location = new EatLocation(s, desc);
+		}
+		VoteTracker.AddVote(location);
+		VotesWindow.singleton.RefreshVotes();
+
+		if (!isLocalPlayer)
+		{
+			ReceiveSuggestion.ShowSuggestion(location);
+		}
 	}
 
 	public void SendAbstain()

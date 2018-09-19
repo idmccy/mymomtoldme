@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class CardMgr : MonoBehaviour
 {
-	const int TOTAL_CARDS = 0;
 	[SerializeField] List<CardDecision> _listCard = new List<CardDecision>();
+	[SerializeField] MakeSuggestion _makeSuggestion = null;
 
 	Stack<CardDecision> _stackCard = new Stack<CardDecision>();
 
+	int _initialNumCards = 0;
 	int _countNo = 0;
+	bool _done = false;
 
 	void Awake()
 	{
@@ -25,6 +27,8 @@ public class CardMgr : MonoBehaviour
 		_stackCard.Push(_listCard[2]);
 		_stackCard.Push(_listCard[1]);
 		_stackCard.Push(_listCard[0]);
+
+		_initialNumCards = _listCard.Count;
 	}
 
 	public void SwipeAgree()
@@ -60,7 +64,7 @@ public class CardMgr : MonoBehaviour
 
 	public void SwipeYouDecide()
 	{
-		if (_stackCard.Count > 0)
+		if (_listCard.Count > 0 && _stackCard.Count > 0)
 		{
 			print("YOU DECIDE");
 			while (_stackCard.Count > 0)
@@ -130,19 +134,31 @@ public class CardMgr : MonoBehaviour
 	{
 		if (_stackCard.Count == 0)
 		{
-			gameObject.SetActive(false);
+			for (var i = 0; i < transform.childCount; ++i)
+			{
+				transform.GetChild(i).gameObject.SetActive(false);
+			}
 		}
 
+		if (_done) return;
+		print(_listCard.Count);
 		if (_listCard.Count == 0)
 		{
-			if (_countNo == TOTAL_CARDS)
+			_done = true;
+			print("_countNo " + _countNo);
+			if (_countNo == _initialNumCards)
 			{
-				// SUGGEST
+				_makeSuggestion.gameObject.SetActive(true);
 			}
 			else
 			{
 				PlayerControl.Local.CompleteChoice();
 			}
 		}
+	}
+
+	public void AddSuggestion(CardDecision card)
+	{
+		_stackCard.Push(card);
 	}
 }
