@@ -43,17 +43,22 @@ public class VoteTracker : NetworkBehaviour
 
 	public static Dictionary<string, int> Votes { get { return _instance._votes; } }
 
-	public static void AddVote(EatLocation location)
+	public static void AddVote(string location)
 	{
-		if (_instance._votes.ContainsKey(location.Name))
+		if (_instance._votes.ContainsKey(location))
 		{
-			++_instance._votes[location.Name];
+			++_instance._votes[location];
 		}
 		else
 		{
-			_instance._votes.Add(location.Name, 1);
+			_instance._votes.Add(location, 1);
 		}
 		UpdateVoteString();
+	}
+
+	public static void AddVote(EatLocation location)
+	{
+		AddVote(location.Name);
 	}
 
 	public static void RemoveVote(EatLocation location)

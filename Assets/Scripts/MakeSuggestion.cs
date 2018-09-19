@@ -17,7 +17,6 @@ public class MakeSuggestion : MonoBehaviour
 			if (_inputName.text != "" && _inputDesc.text != "")
 			{
 				PlayerControl.Local.SendSuggestion(_inputName.text, _inputDesc.text);
-				PlayerControl.Local.CompleteChoice();
 				gameObject.SetActive(false);
 			}
 			else

@@ -7,7 +7,6 @@ public class VoterCounter : MonoBehaviour
 {
 	[SerializeField] Text _txtCurr = null;
 	[SerializeField] Text _txtMax = null;
-	[SerializeField] FinalResult _finalResult = null;
 
 	int _curr = 0;
 	int _max = 0;
@@ -57,31 +56,7 @@ public class VoterCounter : MonoBehaviour
 		print(_instance._curr + " vs " + _instance._max);
 		if (_instance._curr == _instance._max && _instance._max > 0)
 		{
-			List<string> listBest = new List<string>();
-			int highest = -1;
-			foreach (var kvp in VoteTracker.Votes)
-			{
-				if (kvp.Value > highest)
-				{
-					listBest.Clear();
-					listBest.Add(kvp.Key);
-				}
-				else if (kvp.Value == highest)
-				{
-					listBest.Add(kvp.Key);
-				}
-			}
-
-			var random = listBest[Random.Range(0, listBest.Count)];
-			_instance._finalResult.SetLocation(random);
-			_instance.StartCoroutine(_instance.WaitBeforeDisplayFinalResults());
+			PlayerControl.Local.FinalDecision();
 		}
-	}
-
-	IEnumerator WaitBeforeDisplayFinalResults()
-	{
-		yield return new WaitForSeconds(3);
-
-		_finalResult.gameObject.SetActive(true);
 	}
 }

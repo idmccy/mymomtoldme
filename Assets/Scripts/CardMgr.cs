@@ -8,6 +8,7 @@ public class CardMgr : MonoBehaviour
 	[SerializeField] List<CardDecision> _listCard = new List<CardDecision>();
 	[SerializeField] Image _imgBg = null;
 	[SerializeField] MakeSuggestion _makeSuggestion = null;
+	[SerializeField] ReceiveSuggestion _receiveSuggestion = null;
 
 	Stack<CardDecision> _stackCard = new Stack<CardDecision>();
 
@@ -78,7 +79,7 @@ public class CardMgr : MonoBehaviour
 				}
 				StartCoroutine(AnimateDown(card.transform));
 			}
-			PlayerControl.Local.SendAbstain();
+			//PlayerControl.Local.SendAbstain();
 		}
 	}
 
@@ -134,6 +135,7 @@ public class CardMgr : MonoBehaviour
 
 	void CloseIfLastCard()
 	{
+		_receiveSuggestion.gameObject.SetActive(false);
 		if (_stackCard.Count == 0)
 		{
 			_imgBg.enabled = false;
@@ -152,10 +154,6 @@ public class CardMgr : MonoBehaviour
 			if (_countNo == _initialNumCards)
 			{
 				_makeSuggestion.gameObject.SetActive(true);
-			}
-			else
-			{
-				PlayerControl.Local.CompleteChoice();
 			}
 		}
 	}

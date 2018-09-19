@@ -51,12 +51,14 @@ public class PlayerControl : NetworkBehaviour
 	{
 		EatLocation location;
 
-		if (!EatLocation.Presets.TryGetValue(s, out location))
+		if (EatLocation.Presets.TryGetValue(s, out location))
 		{
-			DebugText.Log("No such location: " + s);
-			return;
+			VoteTracker.AddVote(location);
 		}
-		VoteTracker.AddVote(location);
+		else
+		{
+			VoteTracker.AddVote(s);
+		}
 
 		VotesWindow.singleton.RefreshVotes();
 	}
@@ -89,21 +91,21 @@ public class PlayerControl : NetworkBehaviour
 		}
 	}
 
-	public void SendAbstain()
-	{
-		CmdSendAbstain();
-	}
+	//public void SendAbstain()
+	//{
+	//	CmdSendAbstain();
+	//}
 
-	[Command]
-	void CmdSendAbstain()
-	{
-		RpcAbstain();
-	}
+	//[Command]
+	//void CmdSendAbstain()
+	//{
+	//	RpcAbstain();
+	//}
 
-	[ClientRpc]
-	void RpcAbstain()
-	{
-	}
+	//[ClientRpc]
+	//void RpcAbstain()
+	//{
+	//}
 
 	public void CompleteChoice()
 	{
@@ -120,5 +122,49 @@ public class PlayerControl : NetworkBehaviour
 	void RpcCompleteChoice()
 	{
 		VoterCounter.ModifyCurr(1);
+	}
+
+	public void FinalDecision()
+	{
+		CmdFinalDecision();
+	}
+
+	[Command]
+	void CmdFinalDecision()
+	{
+		List<string> listBest = new List<string>();
+		int highest = -1;
+		foreach (var kvp in VoteTracker.Votes)
+		{
+			if (kvp.Value > highest)
+			{
+				listBest.Clear();
+				listBest.Add(kvp.Key);
+			}
+			else if (kvp.Value == highest)
+			{
+				listBest.Add(kvp.Key);
+			}
+		}
+		string finalLocation;
+		if (listBest.Count == 0)
+		{
+			listBest.AddRange(EatLocation.Presets.Keys);
+		}
+		finalLocation = listBest[Random.Range(0, listBest.Count)];
+		RpcFinalDecision(finalLocation);
+	}
+
+	[ClientRpc]
+	void RpcFinalDecision(string decision)
+	{
+		StartCoroutine(WaitBeforeDisplayFinalResults(decision));
+	}
+
+	IEnumerator WaitBeforeDisplayFinalResults(string decision)
+	{
+		yield return new WaitForSeconds(3);
+
+		FinalResult.SetLocation(decision);
 	}
 }

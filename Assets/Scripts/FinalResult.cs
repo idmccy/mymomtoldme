@@ -1,14 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
 
 public class FinalResult : MonoBehaviour
 {
-	[SerializeField] TextMeshProUGUI _txt = null;
+	[SerializeField] Text _txt = null;
 
-	public void SetLocation(string location)
+	static FinalResult _instance;
+
+	void Awake()
 	{
-		_txt.text = location;
+		_instance = this;
+		gameObject.SetActive(false);
+	}
+
+	void OnDestroy()
+	{
+		_instance = null;
+	}
+
+	public static void SetLocation(string location)
+	{
+		_instance._txt.text = location;
+		_instance.gameObject.SetActive(true);
 	}
 }
