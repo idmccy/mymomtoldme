@@ -1,34 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 
+[System.Serializable]
 public struct EatLocation
 {
-	public string Name { get; private set; }
-	public string Description { get; private set; }
+	public string Name;
+	public string Description;
+	public Sprite Sprite;
 
-	public EatLocation(string name, string desc)
+	public EatLocation(string name, string desc, Sprite sprite = null)
 	{
 		Name = name;
 		Description = desc;
+		Sprite = sprite;
 	}
 
 
 	// Static
 
-	static EatLocation[] _presets =
-	{
-		new EatLocation("Arts", "Arts description"),
-		new EatLocation("Business", "Arts description"),
-		new EatLocation("Engine", "Arts description"),
-		new EatLocation("PGP", "Arts description"),
-		new EatLocation("U-Town", "Arts description"),
-	};
-
 	public static Dictionary<string, EatLocation> Presets = new Dictionary<string, EatLocation>();
 
-	public static void Init()
+	public static void Init(EatLocation[] presets)
 	{
-		foreach (var location in _presets)
+		foreach (var location in presets)
 		{
 			Presets.Add(location.Name, location);
 		}

@@ -14,8 +14,8 @@ public class CardDecision : MonoBehaviour
 	public void Setup(EatLocation location)
 	{
 		Location = location;
-		_img.sprite = _img.sprite;
 		_txtName.text = location.Name;
 		_txtDesc.text = location.Description;
+		_img.sprite = location.Sprite;
 	}
 }
