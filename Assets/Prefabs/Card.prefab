@@ -319,6 +319,8 @@ MonoBehaviour:
   _img: {fileID: 114827026992851652}
   _txtName: {fileID: 114104633066928150}
   _txtDesc: {fileID: 114505701035515666}
+  _txtMama: {fileID: 114079490329493486}
+  IsSuggestion: 0
 --- !u!114 &114501762402785612
 MonoBehaviour:
   m_ObjectHideFlags: 1

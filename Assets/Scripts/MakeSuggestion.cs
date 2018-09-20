@@ -26,10 +26,10 @@ public class MakeSuggestion : MonoBehaviour
 			}
 			PlayerControl.Local.CompleteChoice();
 		});
-		//_btnSkip.onClick.AddListener(() =>
-		//{
-		//	PlayerControl.Local.CompleteChoice();
-		//});
+		_btnSkip.onClick.AddListener(() =>
+		{
+			PlayerControl.Local.CompleteChoice();
+		});
 		gameObject.SetActive(false);
 	}
 

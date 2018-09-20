@@ -13,7 +13,10 @@ public class CardMgr : MonoBehaviour
 	[SerializeField] ReceiveSuggestion _receiveSuggestion = null;
 	[SerializeField] Animator _animatorNotification = null;
 	[SerializeField] Text _txtNotification = null;
+	[SerializeField] Text _txtTimer = null;
+	[SerializeField] Image _imgFill = null;
 
+	Coroutine _coroutine;
 	Stack<CardDecision> _stackCard = new Stack<CardDecision>();
 
 	int _initialNumCards = 0;
@@ -73,6 +76,8 @@ public class CardMgr : MonoBehaviour
 		_stackCard.Push(_listCard[0]);
 
 		_initialNumCards = _listCard.Count;
+
+		_coroutine = StartCoroutine(DoTimer());
 	}
 
 	public void SwipeAgree()
@@ -81,6 +86,7 @@ public class CardMgr : MonoBehaviour
 		if (_stackCard.Count > 0)
 		{
 			print("AGREE");
+			StopCoroutine(_coroutine);
 			var card = _stackCard.Pop();
 			if (_listCard.Contains(card))
 			{
@@ -97,6 +103,7 @@ public class CardMgr : MonoBehaviour
 		if (_stackCard.Count > 0)
 		{
 			print("NO PREFERENCE");
+			StopCoroutine(_coroutine);
 			var card = _stackCard.Pop();
 			if (_listCard.Contains(card))
 			{
@@ -127,6 +134,7 @@ public class CardMgr : MonoBehaviour
 				StartCoroutine(AnimateDown(card.transform));
 			}
 			print("YOU DECIDE");
+			StopCoroutine(_coroutine);
 			//PlayerControl.Local.SendAbstain();
 		}
 	}
@@ -154,6 +162,8 @@ public class CardMgr : MonoBehaviour
 		yield return new WaitForSeconds(0.5f);
 		CloseIfLastCard();
 		_isAnimating = false;
+
+		_coroutine = StartCoroutine(DoTimer());
 	}
 
 	IEnumerator AnimateRight(Transform trfCard)
@@ -177,6 +187,8 @@ public class CardMgr : MonoBehaviour
 		yield return new WaitForSeconds(0.5f);
 		CloseIfLastCard();
 		_isAnimating = false;
+
+		_coroutine = StartCoroutine(DoTimer());
 	}
 
 	IEnumerator AnimateDown(Transform trfCard)
@@ -200,6 +212,8 @@ public class CardMgr : MonoBehaviour
 		yield return new WaitForSeconds(0.5f);
 		CloseIfLastCard();
 		_isAnimating = false;
+
+		_coroutine = StartCoroutine(DoTimer());
 	}
 
 	void CloseIfLastCard()
@@ -211,6 +225,14 @@ public class CardMgr : MonoBehaviour
 			for (var i = 0; i < transform.childCount; ++i)
 			{
 				transform.GetChild(i).gameObject.SetActive(false);
+			}
+		}
+		else
+		{
+			if (ReceiveSuggestion.QueueLoc.Count > 0)
+			{
+				_receiveSuggestion.gameObject.SetActive(false);
+				ReceiveSuggestion.ShowSuggestion(ReceiveSuggestion.QueueLoc.Dequeue());
 			}
 		}
 
@@ -234,5 +256,23 @@ public class CardMgr : MonoBehaviour
 	public void AddSuggestion(CardDecision card)
 	{
 		_stackCard.Push(card);
+	}
+
+	IEnumerator DoTimer()
+	{
+		const float TIMEOUT = 20;
+		float ctr = TIMEOUT;
+
+		while (ctr > 0)
+		{
+			ctr -= Time.deltaTime;
+
+			_txtTimer.text = Mathf.CeilToInt(ctr).ToString();
+			_imgFill.fillAmount = (ctr / TIMEOUT);
+
+			yield return null;
+		}
+
+		SwipeNoPreference();
 	}
 }
