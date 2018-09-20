@@ -52,28 +52,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _locations:
-  - Name: Arts
-    Description: Come here for Ma La.
+  - Name: Business
+    Description: Heard there is a newly open Taiwan store, only $1.99
     Sprite: {fileID: 21300000, guid: e309b50a39772fb418df686b6a14fadd, type: 3}
     MamaSays:
-    - Arts 1
+    - New Promo
   - Name: Business
-    Description: It's quite near to the office.
+    Description: It is raining. Get a hot soup?
     Sprite: {fileID: 21300000, guid: 90033eff53a067241bb89052558df866, type: 3}
     MamaSays:
-    - Business 1
-  - Name: Engine
-    Description: McD is nearby.
+    - Raining day
+  - Name: Science
+    Description: You need more veggie.
     Sprite: {fileID: 21300000, guid: 3562facdd645d78489e6ccf911fb2489, type: 3}
     MamaSays:
-    - Engine 1
-  - Name: PGP
-    Description: It's PGP.
+    - Last visit was long time ago
+  - Name: Wow Cow
+    Description: In 2015 today, you had fun here
     Sprite: {fileID: 21300000, guid: ec39cdf8acc548a4991d2c6aeae59afa, type: 3}
     MamaSays:
-    - PGP 1
+    - Last year today you visited
   - Name: U-Town
     Description: Everyday is Friday!
     Sprite: {fileID: 21300000, guid: eec0b2aea324d774a962b4e33e6effb3, type: 3}
     MamaSays:
-    - U-Town 1
+    - Guess you will like it
