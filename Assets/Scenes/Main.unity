@@ -2895,7 +2895,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &840402140
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5969,7 +5969,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Mama is sad that you are \nnot going with your friends.\n\nRemember to
+  m_Text: "It is a pity that you are \nnot going with your friends.\n\nRemember to
     eat."
 --- !u!222 &2135715597
 CanvasRenderer:
