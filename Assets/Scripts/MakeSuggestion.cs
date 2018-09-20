@@ -18,17 +18,18 @@ public class MakeSuggestion : MonoBehaviour
 			if (_inputName.text != "" && _inputDesc.text != "")
 			{
 				PlayerControl.Local.SendSuggestion(_inputName.text, _inputDesc.text);
+				PlayerControl.Local.CompleteChoice();
 				gameObject.SetActive(false);
 			}
 			else
 			{
 				_gobWarning.SetActive(true);
 			}
-			PlayerControl.Local.CompleteChoice();
 		});
 		_btnSkip.onClick.AddListener(() =>
 		{
 			PlayerControl.Local.CompleteChoice();
+			gameObject.SetActive(false);
 		});
 		gameObject.SetActive(false);
 	}

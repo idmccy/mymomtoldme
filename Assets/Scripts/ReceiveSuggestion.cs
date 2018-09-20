@@ -45,4 +45,11 @@ public class ReceiveSuggestion : MonoBehaviour
 		}
 	}
 
+	public static bool IsActive
+	{
+		get
+		{
+			return _instance.gameObject.activeInHierarchy;
+		}
+	}
 }

@@ -265,7 +265,7 @@ public class CardMgr : MonoBehaviour
 
 		while (ctr > 0)
 		{
-			ctr -= Time.deltaTime;
+			if (!ReceiveSuggestion.IsActive) ctr -= Time.deltaTime;
 
 			_txtTimer.text = Mathf.CeilToInt(ctr).ToString();
 			_imgFill.fillAmount = (ctr / TIMEOUT);
