@@ -125,8 +125,9 @@ public class CardMgr : MonoBehaviour
 		{
 			while (_stackCard.Count > 0)
 			{
-				var card = _stackCard.Pop();
+				var card = _stackCard.Peek();
 				if (card.IsSuggestion) return; // can't "skip" suggestion cards
+				card = _stackCard.Pop();
 				if (_listCard.Contains(card))
 				{
 					_listCard.Remove(card);
