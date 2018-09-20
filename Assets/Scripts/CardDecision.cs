@@ -9,6 +9,7 @@ public class CardDecision : MonoBehaviour
 	[SerializeField] Text _txtName = null;
 	[SerializeField] Text _txtDesc = null;
 
+	public bool IsSuggestion = false;
 	public EatLocation Location { get; private set; }
 
 	public void Setup(EatLocation location)

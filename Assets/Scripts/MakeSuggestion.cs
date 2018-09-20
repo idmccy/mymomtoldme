@@ -8,6 +8,7 @@ public class MakeSuggestion : MonoBehaviour
 	[SerializeField] InputField _inputName = null;
 	[SerializeField] InputField _inputDesc = null;
 	[SerializeField] Button _btnSuggest = null;
+	[SerializeField] Button _btnSkip = null;
 	[SerializeField] GameObject _gobWarning = null;
 
 	void Awake()
@@ -23,7 +24,12 @@ public class MakeSuggestion : MonoBehaviour
 			{
 				_gobWarning.SetActive(true);
 			}
+			PlayerControl.Local.CompleteChoice();
 		});
+		//_btnSkip.onClick.AddListener(() =>
+		//{
+		//	PlayerControl.Local.CompleteChoice();
+		//});
 		gameObject.SetActive(false);
 	}
 

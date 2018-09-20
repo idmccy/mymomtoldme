@@ -7,15 +7,61 @@ public class PlayerControl : NetworkBehaviour
 {
 	public static PlayerControl Local { get; private set; }
 
+	public static List<PlayerControl> Players = new List<PlayerControl>();
+
+	public int remainingSuggestions = 0;
+
 	void Start()
 	{
+		Players.Add(this);
 		VoterCounter.ModifyMax(1);
 	}
+
+
+	public static void Shuffle<T>(IList<T> list)
+	{
+		int n = list.Count;
+		var rng = new System.Random();
+		while (n > 1)
+		{
+			n--;
+			int k = rng.Next(n + 1);
+			T value = list[k];
+			list[k] = list[n];
+			list[n] = value;
+		}
+	}
+
 
 	public override void OnStartLocalPlayer()
 	{
 		base.OnStartLocalPlayer();
 		Local = this;
+		print(Ntwk.singleton.numPlayers);
+		if (Ntwk.singleton.numPlayers == 1)
+		{
+			List<int> listInt = new List<int>();
+			for (int i = 0; i < EatLocation.Presets.Count; ++i)
+			{
+				listInt.Add(i);
+			}
+			Shuffle(listInt);
+			string concat = "";
+			foreach (var j in listInt)
+			{
+				concat += j + "|";
+			}
+			concat = concat.Substring(0, concat.Length - 1);
+
+			print(concat);
+			CmdInitCards(concat);
+		}
+	}
+
+	[Command]
+	void CmdInitCards(string initStr)
+	{
+		VoteTracker.SetInitString(initStr);
 	}
 
 	void OnDestroy()
@@ -35,20 +81,42 @@ public class PlayerControl : NetworkBehaviour
 		Ntwk.singleton.StopClient();
 	}
 
-	public void SendVote(string s)
+	public void IgnoreSuggestion()
 	{
-		CmdSendVote(s);
+		CmdIgnoreSuggestion();
 	}
 
 	[Command]
-	void CmdSendVote(string s)
+	void CmdIgnoreSuggestion()
 	{
-		RpcSendVote(s);
+		RpcIgnoreSuggestion();
 	}
 
 	[ClientRpc]
-	void RpcSendVote(string s)
+	void RpcIgnoreSuggestion()
 	{
+		--remainingSuggestions;
+	}
+
+	public void SendVote(string s, bool isSuggestion)
+	{
+		CmdSendVote(s, isSuggestion);
+	}
+
+	[Command]
+	void CmdSendVote(string s, bool isSuggestion)
+	{
+		RpcSendVote(s, isSuggestion);
+	}
+
+	[ClientRpc]
+	void RpcSendVote(string s, bool isSuggestion)
+	{
+		if (isSuggestion)
+		{
+			--remainingSuggestions;
+		}
+
 		EatLocation location;
 
 		if (EatLocation.Presets.TryGetValue(s, out location))
@@ -85,6 +153,10 @@ public class PlayerControl : NetworkBehaviour
 		VoteTracker.AddVote(location);
 		VotesWindow.singleton.RefreshVotes();
 
+		foreach (var player in Players)
+		{
+			if (player != this) ++player.remainingSuggestions;
+		}
 		if (!isLocalPlayer)
 		{
 			ReceiveSuggestion.ShowSuggestion(location);
@@ -163,7 +235,7 @@ public class PlayerControl : NetworkBehaviour
 
 	IEnumerator WaitBeforeDisplayFinalResults(string decision)
 	{
-		yield return new WaitForSeconds(3);
+		yield return new WaitForSeconds(2);
 
 		FinalResult.SetLocation(decision);
 	}

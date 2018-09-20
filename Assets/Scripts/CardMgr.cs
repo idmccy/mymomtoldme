@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class CardMgr : MonoBehaviour
 {
+	public static CardMgr singleton { get; private set; }
+
 	[SerializeField] List<CardDecision> _listCard = new List<CardDecision>();
 	[SerializeField] Image _imgBg = null;
 	[SerializeField] MakeSuggestion _makeSuggestion = null;
@@ -17,12 +19,23 @@ public class CardMgr : MonoBehaviour
 	int _initialNumCards = 0;
 	int _countNo = 0;
 	bool _isAnimating = false;
+	bool _hasInit = false;
 	bool _done = false;
 
-	public static void Shuffle<T>(IList<T> list)
+	void Awake()
+	{
+		singleton = this;
+	}
+
+	void OnDestroy()
+	{
+		singleton = null;
+	}
+
+	public static void Shuffle<T>(IList<T> list, int seed)
 	{
 		int n = list.Count;
-		var rng = new System.Random();
+		var rng = new System.Random(seed);
 		while (n > 1)
 		{
 			n--;
@@ -33,14 +46,24 @@ public class CardMgr : MonoBehaviour
 		}
 	}
 
-	void Start()
+	public void InitCards(string strInit)
 	{
+		if (_hasInit) return;
+		_hasInit = true;
+		DebugText.Log("Init Cards " + strInit);
 		int i = 0;
-		var listPresets = new List<EatLocation>(EatLocation.Presets.Values);
-		Shuffle(listPresets);
-		foreach (var preset in listPresets)
+		var listLoc = new List<EatLocation>(EatLocation.Presets.Values);
+		var listIndex = new List<int>();
+
+		string[] tok = strInit.Split('|');
+		foreach (string s in tok)
 		{
-			_listCard[i].Setup(preset);
+			listIndex.Add(int.Parse(s));
+		}
+
+		foreach (var index in listIndex)
+		{
+			_listCard[i].Setup(listLoc[index]);
 			++i;
 			if (i >= _listCard.Count) break;
 		}
@@ -63,7 +86,7 @@ public class CardMgr : MonoBehaviour
 			{
 				_listCard.Remove(card);
 			}
-			PlayerControl.Local.SendVote(card.Location.Name);
+			PlayerControl.Local.SendVote(card.Location.Name, card.IsSuggestion);
 			StartCoroutine(AnimateRight(card.transform));
 		}
 	}
@@ -80,7 +103,10 @@ public class CardMgr : MonoBehaviour
 				++_countNo;
 				_listCard.Remove(card);
 			}
-			//PlayerControl.Local.SendVote(card.Location.Name, false);
+			if (card.IsSuggestion)
+			{
+				PlayerControl.Local.IgnoreSuggestion();
+			}
 			StartCoroutine(AnimateLeft(card.transform));
 		}
 	}
@@ -90,16 +116,17 @@ public class CardMgr : MonoBehaviour
 		if (_isAnimating) return;
 		if (_listCard.Count > 0 && _stackCard.Count > 0)
 		{
-			print("YOU DECIDE");
 			while (_stackCard.Count > 0)
 			{
 				var card = _stackCard.Pop();
+				if (card.IsSuggestion) return; // can't "skip" suggestion cards
 				if (_listCard.Contains(card))
 				{
 					_listCard.Remove(card);
 				}
 				StartCoroutine(AnimateDown(card.transform));
 			}
+			print("YOU DECIDE");
 			//PlayerControl.Local.SendAbstain();
 		}
 	}
@@ -196,6 +223,10 @@ public class CardMgr : MonoBehaviour
 			if (_countNo == _initialNumCards)
 			{
 				_makeSuggestion.gameObject.SetActive(true);
+			}
+			else
+			{
+				PlayerControl.Local.CompleteChoice();
 			}
 		}
 	}

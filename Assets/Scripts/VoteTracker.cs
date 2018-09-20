@@ -8,11 +8,22 @@ public class VoteTracker : NetworkBehaviour
 	[SyncVar]
 	string voteString = "";
 
+	[SyncVar]
+	public string stringInit = "";
+
 	Dictionary<string, int> _votes = new Dictionary<string, int>();
 
 	void Awake()
 	{
 		_instance = this;
+	}
+
+
+	IEnumerator Start()
+	{
+		while (stringInit == "") yield return null;
+
+		CardMgr.singleton.InitCards(stringInit);
 	}
 
 	public override void OnStartClient()
@@ -72,6 +83,11 @@ public class VoteTracker : NetworkBehaviour
 			Debug.LogError("No such location: " + location.Name);
 		}
 		UpdateVoteString();
+	}
+
+	public static void SetInitString(string strInit)
+	{
+		_instance.stringInit = strInit;
 	}
 
 	const char DELIMITER_KEY = '`';
