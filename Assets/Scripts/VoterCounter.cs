@@ -7,6 +7,7 @@ public class VoterCounter : MonoBehaviour
 {
 	[SerializeField] Text _txtCurr = null;
 	[SerializeField] Text _txtMax = null;
+	[SerializeField] Image _imgFill = null;
 
 	int _curr = 0;
 	int _max = 0;
@@ -54,6 +55,14 @@ public class VoterCounter : MonoBehaviour
 	static void CheckDone()
 	{
 		print(_instance._curr + " vs " + _instance._max);
+		if (_instance._max == 0)
+		{
+			_instance._imgFill.fillAmount = 0;
+		}
+		else
+		{
+			_instance._imgFill.fillAmount = _instance._curr / _instance._max;
+		}
 		if (_instance._curr == _instance._max && _instance._max > 0)
 		{
 			_instance.StartCoroutine(_instance.WaitForAllSuggestionsToClear());
