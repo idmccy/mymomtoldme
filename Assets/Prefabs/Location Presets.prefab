@@ -52,28 +52,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _locations:
-  - Name: Business
-    Description: Heard there is a newly open Taiwan store, only $1.99
+  - Name: Business 2
+    Description: Heard there is a newly opened Taiwan store, only $1.99!
     Sprite: {fileID: 21300000, guid: e309b50a39772fb418df686b6a14fadd, type: 3}
     MamaSays:
-    - New Promo
+    - New Promo!
   - Name: Business
-    Description: It is raining. Get a hot soup?
+    Description: It is raining. Get some hot soup?
     Sprite: {fileID: 21300000, guid: 90033eff53a067241bb89052558df866, type: 3}
     MamaSays:
-    - Raining day
+    - Rainy day.
   - Name: Science
-    Description: You need more veggie.
+    Description: You need more veggies.
     Sprite: {fileID: 21300000, guid: 3562facdd645d78489e6ccf911fb2489, type: 3}
     MamaSays:
-    - Last visit was long time ago
+    - Last visit was a long time ago.
   - Name: Wow Cow
-    Description: In 2015 today, you had fun here
+    Description: You had fun here on this day in 2015.
     Sprite: {fileID: 21300000, guid: ec39cdf8acc548a4991d2c6aeae59afa, type: 3}
     MamaSays:
-    - Last year today you visited
+    - On this day 3 years ago you visited this place.
   - Name: U-Town
     Description: Everyday is Friday!
     Sprite: {fileID: 21300000, guid: eec0b2aea324d774a962b4e33e6effb3, type: 3}
     MamaSays:
-    - Guess you will like it
+    - Guess you will like it.
