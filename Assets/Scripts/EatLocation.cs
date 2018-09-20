@@ -9,12 +9,14 @@ public struct EatLocation
 	public string Name;
 	public string Description;
 	public Sprite Sprite;
+	public List<string> MamaSays;
 
-	public EatLocation(string name, string desc, Sprite sprite = null)
+	public EatLocation(string name, string desc, Sprite sprite = null, List<string> mamaSays = null)
 	{
 		Name = name;
 		Description = desc;
 		Sprite = sprite;
+		MamaSays = (mamaSays == null) ? new List<string>() : mamaSays;
 	}
 
 
