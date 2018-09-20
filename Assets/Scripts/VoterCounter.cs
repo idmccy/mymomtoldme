@@ -56,7 +56,30 @@ public class VoterCounter : MonoBehaviour
 		print(_instance._curr + " vs " + _instance._max);
 		if (_instance._curr == _instance._max && _instance._max > 0)
 		{
-			PlayerControl.Local.FinalDecision();
+			_instance.StartCoroutine(_instance.WaitForAllSuggestionsToClear());
 		}
+	}
+
+	IEnumerator WaitForAllSuggestionsToClear()
+	{
+		yield return new WaitForSeconds(1);
+
+		while (true)
+		{
+			bool hasSuggestions = false;
+			foreach (var player in PlayerControl.Players)
+			{
+				print("remainings " + player.remainingSuggestions);
+				if (player.remainingSuggestions > 0)
+				{
+					hasSuggestions = true;
+					break;
+				}
+			}
+			print("----");
+			if (!hasSuggestions) break;
+			yield return new WaitForSeconds(0.5f);
+		}
+		PlayerControl.Local.FinalDecision();
 	}
 }
