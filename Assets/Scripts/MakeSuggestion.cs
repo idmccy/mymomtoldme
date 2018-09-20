@@ -24,6 +24,7 @@ public class MakeSuggestion : MonoBehaviour
 				_gobWarning.SetActive(true);
 			}
 		});
+		gameObject.SetActive(false);
 	}
 
 }

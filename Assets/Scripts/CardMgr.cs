@@ -9,11 +9,14 @@ public class CardMgr : MonoBehaviour
 	[SerializeField] Image _imgBg = null;
 	[SerializeField] MakeSuggestion _makeSuggestion = null;
 	[SerializeField] ReceiveSuggestion _receiveSuggestion = null;
+	[SerializeField] Animator _animatorNotification = null;
+	[SerializeField] Text _txtNotification = null;
 
 	Stack<CardDecision> _stackCard = new Stack<CardDecision>();
 
 	int _initialNumCards = 0;
 	int _countNo = 0;
+	bool _isAnimating = false;
 	bool _done = false;
 
 	public static void Shuffle<T>(IList<T> list)
@@ -51,6 +54,7 @@ public class CardMgr : MonoBehaviour
 
 	public void SwipeAgree()
 	{
+		if (_isAnimating) return;
 		if (_stackCard.Count > 0)
 		{
 			print("AGREE");
@@ -66,6 +70,7 @@ public class CardMgr : MonoBehaviour
 
 	public void SwipeNoPreference()
 	{
+		if (_isAnimating) return;
 		if (_stackCard.Count > 0)
 		{
 			print("NO PREFERENCE");
@@ -82,6 +87,7 @@ public class CardMgr : MonoBehaviour
 
 	public void SwipeYouDecide()
 	{
+		if (_isAnimating) return;
 		if (_listCard.Count > 0 && _stackCard.Count > 0)
 		{
 			print("YOU DECIDE");
@@ -102,6 +108,9 @@ public class CardMgr : MonoBehaviour
 	const float OFFSET = 2000;
 	IEnumerator AnimateLeft(Transform trfCard)
 	{
+		_isAnimating = true;
+		_txtNotification.text = "No Preference";
+		_animatorNotification.SetTrigger("FadeIn");
 		float moved = 0;
 		while (moved < OFFSET)
 		{
@@ -113,11 +122,18 @@ public class CardMgr : MonoBehaviour
 
 			yield return null;
 		}
+		yield return new WaitForSeconds(0.5f);
+		_animatorNotification.SetTrigger("FadeOut");
+		yield return new WaitForSeconds(0.5f);
 		CloseIfLastCard();
+		_isAnimating = false;
 	}
 
 	IEnumerator AnimateRight(Transform trfCard)
 	{
+		_isAnimating = true;
+		_txtNotification.text = "I Agree!";
+		_animatorNotification.SetTrigger("FadeIn");
 		float moved = 0;
 		while (moved < OFFSET)
 		{
@@ -129,11 +145,18 @@ public class CardMgr : MonoBehaviour
 
 			yield return null;
 		}
+		yield return new WaitForSeconds(0.5f);
+		_animatorNotification.SetTrigger("FadeOut");
+		yield return new WaitForSeconds(0.5f);
 		CloseIfLastCard();
+		_isAnimating = false;
 	}
 
 	IEnumerator AnimateDown(Transform trfCard)
 	{
+		_isAnimating = true;
+		_txtNotification.text = "You Decide";
+		_animatorNotification.SetTrigger("FadeIn");
 		float moved = 0;
 		while (moved < OFFSET)
 		{
@@ -145,7 +168,11 @@ public class CardMgr : MonoBehaviour
 
 			yield return null;
 		}
+		yield return new WaitForSeconds(0.5f);
+		_animatorNotification.SetTrigger("FadeOut");
+		yield return new WaitForSeconds(0.5f);
 		CloseIfLastCard();
+		_isAnimating = false;
 	}
 
 	void CloseIfLastCard()

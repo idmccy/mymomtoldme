@@ -16,6 +16,9 @@ public class CardDecision : MonoBehaviour
 		Location = location;
 		_txtName.text = location.Name;
 		_txtDesc.text = location.Description;
-		_img.sprite = location.Sprite;
+		if (location.Sprite != null)
+		{
+			_img.sprite = location.Sprite;
+		}
 	}
 }
