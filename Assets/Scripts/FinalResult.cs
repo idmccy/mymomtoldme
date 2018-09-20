@@ -24,5 +24,6 @@ public class FinalResult : MonoBehaviour
 	{
 		_instance._txt.text = location;
 		_instance.gameObject.SetActive(true);
+		Ntwk.singleton.StopClient();
 	}
 }

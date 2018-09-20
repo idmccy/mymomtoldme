@@ -12,10 +12,51 @@ public class PlayerControl : NetworkBehaviour
 		VoterCounter.ModifyMax(1);
 	}
 
+
+	public static void Shuffle<T>(IList<T> list)
+	{
+		int n = list.Count;
+		var rng = new System.Random();
+		while (n > 1)
+		{
+			n--;
+			int k = rng.Next(n + 1);
+			T value = list[k];
+			list[k] = list[n];
+			list[n] = value;
+		}
+	}
+
+
 	public override void OnStartLocalPlayer()
 	{
 		base.OnStartLocalPlayer();
 		Local = this;
+		print(Ntwk.singleton.numPlayers);
+		if (Ntwk.singleton.numPlayers == 1)
+		{
+			List<int> listInt = new List<int>();
+			for (int i = 0; i < EatLocation.Presets.Count; ++i)
+			{
+				listInt.Add(i);
+			}
+			Shuffle(listInt);
+			string concat = "";
+			foreach (var j in listInt)
+			{
+				concat += j + "|";
+			}
+			concat = concat.Substring(0, concat.Length - 1);
+
+			print(concat);
+			CmdInitCards(concat);
+		}
+	}
+
+	[Command]
+	void CmdInitCards(string initStr)
+	{
+		VoteTracker.SetInitString(initStr);
 	}
 
 	void OnDestroy()
